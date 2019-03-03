@@ -1,0 +1,10 @@
+llvm-7.0:
+  image: jayeshbadwaik/lacdocker
+  only:
+    - master
+    - develop
+    - staging
+  script:
+    - mkdir -p /tmp/zell/testdata
+    - git clone --depth=1 https://github.com/liblac/testdata.git /tmp/zell/testdata
+    - bash utils/citools/linux/ci llvm-7.0

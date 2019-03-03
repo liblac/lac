@@ -1,0 +1,10 @@
+#!/bin/bash
+VERSION=$1
+LAST_TAG=$(git describe --abbrev=0)
+echo "" | cat - changelog.md > temp && mv temp changelog.md
+echo "" | cat - changelog.md > temp && mv temp changelog.md
+git log $LAST_TAG...develop --pretty=format:'- [\[%h\]](http://github.com/liblac/lac/commit/%H)  %s' --reverse  | cat - changelog.md > temp && mv temp changelog.md
+echo "" | cat - changelog.md > temp && mv temp changelog.md
+echo $(date -u +"%Y-%m-%d %T UTC") | cat - changelog.md > temp && mv temp changelog.md
+echo "" | cat - changelog.md > temp && mv temp changelog.md
+echo "# $VERSION" | cat - changelog.md > temp && mv temp changelog.md

@@ -1,0 +1,23 @@
+{{ partial "header.html" . }}
+<div class="article-meta">
+<h1><span class="title">{{ .Title }}</span></h1>
+{{ with .Params.author }}<h2 class="author">{{ . }}</h2>{{ end }}
+{{ if .Params.date }}<h3 class="date">Created: {{ .Date.Format  "Monday, Jan 2, 2006"}} <br>  Updated: {{ .Lastmod.Format  "Monday, Jan 2, 2006"}}</h3>{{ end }}
+<p class="terms">
+  {{ range $i := (slice "categories" "tags") }}
+  {{ with ($.Param $i) }}
+  {{ $i | title }}: {{ range $k := . }}<a href="{{ relURL (print "/" $i "/" $k | urlize) }}">{{$k}}</a> {{ end }}
+  {{ end }}
+  {{ end }}
+</p>
+</div>
+
+{{ if .Params.toc }}
+{{ .TableOfContents }}
+{{ end }}
+
+<main>
+{{ .Content }}
+</main>
+
+{{ partial "footer.html" . }}

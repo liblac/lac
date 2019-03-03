@@ -1,0 +1,18 @@
+#!/bin/bash
+# Check if there are three arguments provided
+if [ "$#" -ne 1 ]; then
+  echo "Script requires toolchain name."
+  exit 1
+fi
+
+PROJECT_NAME=lac
+PLATFORM=$1
+CONTAINER=${PROJECT_NAME}-${PLATFORM}
+SRC=$PWD
+docker run --cap-add=SYS_PTRACE -t -d --name ${CONTAINER} jayeshbadwaik/lacdocker bash
+docker exec ${CONTAINER} /bin/bash -c "mkdir -p /tmp/${PROJECT_NAME}"
+docker cp $SRC/. ${CONTAINER}:/tmp/${PROJECT_NAME}/src
+docker cp $SRC/../testdata ${CONTAINER}:/tmp/${PROJECT_NAME}/testdata
+docker exec ${CONTAINER} /bin/bash -c "cd tmp/${PROJECT_NAME}/src && utils/citools/linux/ci ${PLATFORM}"
+docker stop ${CONTAINER}
+docker rm ${CONTAINER}

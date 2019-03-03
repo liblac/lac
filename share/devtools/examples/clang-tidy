@@ -1,0 +1,19 @@
+#!/bin/bash
+# Exit on Any Command Failing
+set -e
+set -o pipefail
+
+mkdir -p ../clang-tidy && pushd ../clang-tidy
+cmake \
+  -DBUILD_TESTING=On \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DCMAKE_EXPORT_COMPILE_COMMANDS=On \
+  -DCMAKE_INSTALL_PREFIX=../run \
+  -DCMAKE_TOOLCHAIN_FILE=/opt/jaystack/lac/llvm-7.0/etc/toolchain.cmake\
+  -DLAC_TESTDATA_PATH=../testdata  \
+  -DLAC_TESTOUTPUT_PATH=../testoutput  \
+  ../code
+  make codegen
+popd
+cp ../clang-tidy/compile_commands.json .
+/usr/share/clang/run-clang-tidy.py -quiet -j $1

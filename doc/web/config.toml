@@ -1,0 +1,31 @@
+baseURL = "https://liblac.github.io/"
+languageCode = "en-us"
+title = "lac documentation"
+theme = "classic"
+enableGitInfo = true
+[permalinks]
+  posts = "/:filename"
+
+[params]
+  author = "lac"
+  githubid = "lac"
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
+[menu]
+  [[menu.main]]
+    identifier = "whats-new"
+    name = "what's new?"
+    pre = "<i class='fa fa-heart'></i>"
+    url = "/whats-new/"
+    weight = 1
+
+  [[menu.main]]
+    identifier = "api"
+    name = "api"
+    pre = "<i class='fa fa-heart'></i>"
+    url = "/api/"
+    weight = 2
+

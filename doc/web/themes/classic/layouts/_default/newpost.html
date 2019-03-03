@@ -1,0 +1,29 @@
+{{ partial "header.html" . }}
+
+{{if not .IsHome }}
+<h1>{{ .Title }}</h1>
+{{ end }}
+
+
+{{ .Content }}
+
+<ul class="section-one-and-two-pages">
+{{ range .Site.RegularPages.ByLastmod.Reverse }}
+{{ if or (ne .Layout "allpost")}}
+{{ if or (ne .Layout "newpost")}}
+{{ if or (ne .Title "About Me")}}
+{{ if or (not (ge (div (sub now.Unix .Lastmod.Unix) 86400) 30))}}
+  <li>
+    <span class="date">{{ .Lastmod.Format "Monday, Jan 2, 2006" }}</span>
+    <a href="{{ .URL }}">{{ .Title }}</a> <br>
+    {{ .Summary }}
+    <hr color="#aaaaaa">
+  </li>
+{{ end }}
+{{ end }}
+{{ end }}
+{{ end }}
+{{ end }}
+</ul>
+
+{{ partial "footer.html" . }}

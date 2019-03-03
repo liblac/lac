@@ -1,0 +1,45 @@
+<!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.css" integrity="sha384-D+9gmBxUQogRLqvARvNLmA9hS2x//eK1FhVb9PiU86gmcrBrJAQT8okdJ4LMp2uv" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.js" integrity="sha384-483A6DwYfKeDa0Q52fJmxFXkcPCFfnXMoXblOkJ4JcA8zATN6Tm78UNL72AKk+0O" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/contrib/auto-render.min.js" integrity="sha384-yACMu8JWxKzSp/C1YV86pzGiQ/l1YUfE8oPuahJQxzehAjEt2GiQuy/BIvl9KyeF" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body);
+        });
+    </script>
+
+<header>
+  <script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+  </script>
+  <!--
+  Syntax highlighting - defaults to atom light theme.
+  List here: https://github.com/isagalaev/highlight.js/tree/master/src/styles
+  -->
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <div class="topnav" id="myTopnav">
+      {{ $title := lower .Title }}
+      {{ $section := lower .Section }}
+        <a href="{{ .Site.BaseURL }}">{{ .Site.Params.author}}</a>
+      {{ range .Site.Menus.main.ByWeight}}
+      {{ $name := lower .Name }}
+        <a href="{{ .URL }}">{{ lower .Name }}</a>
+      {{end}}
+
+      {{ range .Site.Menus.feed }}
+      {{ $name := lower .Name}}
+        <a href="{{ .URL }}">{{ lower .Name}}</a>
+      {{end}}
+      <a href="javascript:void(0);" class="icon" onclick="myFunction()">&#9776;</a>
+  </div>
+<link href="https://fonts.googleapis.com/css?family=Fira+Mono|Roboto+Slab|Source+Sans+Pro" rel="stylesheet">
+</header>
