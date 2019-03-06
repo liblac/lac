@@ -4,19 +4,55 @@
 #include <experimental/filesystem>
 #include <fstream>
 #include <iostream>
+#include <lac/cpu_execution_engine.hpp>
 #include <lac/execution_policy.hpp>
-#include <lac/static_vector.hpp>
 #include <lac/vector_operation.hpp>
 #include <limits>
+#include <testlac/jvector.hpp>
 
-namespace testlac {
+namespace randomns {
 struct verbose_policy {
 };
-} // namespace testlac
+
+template <typename A,
+          typename RT = lac::negation_trait_r<A>,
+          typename = std::enable_if_t<lac::is_vector_storage_v<A>>>
+auto operator-(A const& va) -> RT
+{
+  using EP = typename A::execution_policy;
+  constexpr auto ne = lac::negation_engine<EP>();
+  return ne.template operator()<A, RT>(va);
+}
+
+template <typename A,
+          typename B,
+          typename RT = lac::addition_trait_r<A, B>,
+          typename = std::enable_if_t<
+            lac::is_vector_storage_v<A> and lac::is_vector_storage_v<B>>>
+auto operator+(A const& va, B const& vb) -> RT
+{
+  using EP = typename A::execution_policy;
+  constexpr auto ae = lac::addition_engine<EP>();
+  return ae.template operator()<A, B, RT>(va, vb);
+}
+
+template <typename A,
+          typename B,
+          typename RT = lac::subtraction_trait_r<A, B>,
+          typename = std::enable_if_t<
+            lac::is_vector_storage_v<A> and lac::is_vector_storage_v<B>>>
+auto operator-(A const& va, B const& vb) -> RT
+{
+  using EP = typename A::execution_policy;
+  constexpr auto se = lac::subtraction_engine<EP>();
+  return se.template operator()<A, B, RT>(va, vb);
+}
+
+} // namespace randomns
 
 namespace lac {
 template <>
-struct negation_engine<testlac::verbose_policy> {
+struct negation_engine<randomns::verbose_policy> {
 
   template <typename T, typename RT>
   auto operator()(T const& t) const -> RT
@@ -31,7 +67,7 @@ struct negation_engine<testlac::verbose_policy> {
 };
 
 template <>
-struct addition_engine<testlac::verbose_policy> {
+struct addition_engine<randomns::verbose_policy> {
   template <typename T, typename U, typename RT>
   auto operator()(T const& t, U const& u) const -> RT
   {
@@ -45,7 +81,7 @@ struct addition_engine<testlac::verbose_policy> {
 };
 
 template <>
-struct subtraction_engine<testlac::verbose_policy> {
+struct subtraction_engine<randomns::verbose_policy> {
   template <typename T, typename U, typename RT>
   auto operator()(T const& t, U const& u) const -> RT
   {
@@ -60,49 +96,49 @@ struct subtraction_engine<testlac::verbose_policy> {
 
 } // namespace lac
 
-using vec3 = lac::static_vector<lac::cpu_execution_policy, double, 3>;
-using rvec3 = lac::static_vector<testlac::verbose_policy, double, 3>;
+using vec3 = testlac::jvector<lac::cpu_execution_policy>;
+using rvec3 = testlac::jvector<randomns::verbose_policy>;
 constexpr auto tolerance = std::numeric_limits<double>::epsilon();
 
-TEST_CASE("static_vector : type_check", "[static_vector]")
+TEST_CASE("jvector : type_check", "[jvector]")
 {
   static_assert(lac::is_vector_storage_v<vec3>);
 }
 
-TEST_CASE("static_vector : construction", "[static_vector]")
+TEST_CASE("jvector : construction", "[jvector]")
 {
-  auto static_vector = vec3();
+  auto jvector = vec3();
 
-  static_vector(0) = 2;
-  static_vector(1) = 3;
-  static_vector(2) = 5;
+  jvector(0) = 2;
+  jvector(1) = 3;
+  jvector(2) = 5;
 
-  REQUIRE(static_vector.capacity() == 3);
-  REQUIRE(static_vector.size() == 3);
-  REQUIRE(std::abs(static_vector(0) - 2) < tolerance);
-  REQUIRE(std::abs(static_vector(1) - 3) < tolerance);
-  REQUIRE(std::abs(static_vector(2) - 5) < tolerance);
+  REQUIRE(jvector.capacity() == 3);
+  REQUIRE(jvector.size() == 3);
+  REQUIRE(std::abs(jvector(0) - 2) < tolerance);
+  REQUIRE(std::abs(jvector(1) - 3) < tolerance);
+  REQUIRE(std::abs(jvector(2) - 5) < tolerance);
 }
 
-TEST_CASE("static_vector : iterator based access", "[static_vector]")
+TEST_CASE("jvector : iterator based access", "[jvector]")
 {
 
-  auto static_vector = vec3();
+  auto jvector = vec3();
 
-  static_vector(0) = 2;
-  static_vector(1) = 3;
-  static_vector(2) = 5;
+  jvector(0) = 2;
+  jvector(1) = 3;
+  jvector(2) = 5;
 
-  for (auto& a : static_vector) {
+  for (auto& a : jvector) {
     a *= 2;
   }
 
-  REQUIRE(std::abs(static_vector(0) - 4) < tolerance);
-  REQUIRE(std::abs(static_vector(1) - 6) < tolerance);
-  REQUIRE(std::abs(static_vector(2) - 10) < tolerance);
+  REQUIRE(std::abs(jvector(0) - 4) < tolerance);
+  REQUIRE(std::abs(jvector(1) - 6) < tolerance);
+  REQUIRE(std::abs(jvector(2) - 10) < tolerance);
 }
 
-TEST_CASE("static_vector : negation", "[static_vector]")
+TEST_CASE("jvector : negation", "[jvector]")
 {
   auto va = vec3();
   va(0) = 2;
@@ -116,7 +152,7 @@ TEST_CASE("static_vector : negation", "[static_vector]")
   REQUIRE(std::abs(vb(2) + 5) < tolerance);
 }
 
-TEST_CASE("static_vector : addition", "[static_vector]")
+TEST_CASE("jvector : addition", "[jvector]")
 {
   auto va = vec3();
   va(0) = 2;
@@ -135,7 +171,7 @@ TEST_CASE("static_vector : addition", "[static_vector]")
   REQUIRE(std::abs(vc(2) - 12) < tolerance);
 }
 
-TEST_CASE("static_vector : subtraction", "[static_vector]")
+TEST_CASE("jvector : subtraction", "[jvector]")
 {
   auto va = vec3();
   va(0) = 2;
@@ -154,7 +190,7 @@ TEST_CASE("static_vector : subtraction", "[static_vector]")
   REQUIRE(std::abs(vc(2) - 2) < tolerance);
 }
 
-TEST_CASE("static_vector: verbose negation", "[static_vector]")
+TEST_CASE("jvector: verbose negation", "[jvector]")
 {
   auto va = rvec3();
   va(0) = 2;
@@ -168,7 +204,7 @@ TEST_CASE("static_vector: verbose negation", "[static_vector]")
   REQUIRE(std::abs(vb(2) + 5) < tolerance);
 }
 
-TEST_CASE("static_vector: verbose addition", "[static_vector]")
+TEST_CASE("jvector: verbose addition", "[jvector]")
 {
   auto va = rvec3();
   va(0) = 2;
@@ -187,7 +223,7 @@ TEST_CASE("static_vector: verbose addition", "[static_vector]")
   REQUIRE(std::abs(vc(2) - 12) < tolerance);
 }
 
-TEST_CASE("static_vector: verbose subtraction", "[static_vector]")
+TEST_CASE("jvector: verbose subtraction", "[jvector]")
 {
   auto va = rvec3();
   va(0) = 2;

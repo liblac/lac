@@ -13,6 +13,16 @@ struct is_vector_storage<static_vector<EP, F, N>> : std::true_type {
 };
 
 template <typename EP, typename F, std::int64_t N>
+struct addition_trait<static_vector<EP, F, N>, static_vector<EP, F, N>> {
+  using result_type = static_vector<EP, F, N>;
+};
+
+template <typename EP, typename F, std::int64_t N>
+struct subtraction_trait<static_vector<EP, F, N>, static_vector<EP, F, N>> {
+  using result_type = static_vector<EP, F, N>;
+};
+
+template <typename EP, typename F, std::int64_t N>
 class static_vector {
 
 private:
