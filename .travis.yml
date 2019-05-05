@@ -1,0 +1,28 @@
+sudo: required
+language: generic
+services:
+  - docker
+
+branches:
+  only:
+    - master
+    - develop
+    - staging
+
+env:
+  - PLATFORM=llvm-7.0
+
+before_script :
+  - docker pull jayeshbadwaik/lacdocker
+
+script:
+  - PROJECT_NAME=lac
+  - CONTAINER=${PROJECT_NAME}-$PLATFORM
+  - SRC=$PWD
+  - docker run --cap-add=SYS_PTRACE -t -d --name ${CONTAINER} jayeshbadwaik/lacdocker bash
+  - docker exec ${CONTAINER} /bin/bash -c "mkdir -p /tmp/${PROJECT_NAME}"
+  - docker cp $SRC/. ${CONTAINER}:/tmp/${PROJECT_NAME}/src
+  - docker exec ${CONTAINER} /bin/bash -c "git clone --depth=1 https://github.com/liblac/testdata.git /tmp/lac/testdata"
+  - docker exec ${CONTAINER} /bin/bash -c "cd tmp/${PROJECT_NAME}/src && utils/citools/linux/ci ${PLATFORM}"
+  - docker stop ${CONTAINER}
+  - docker rm ${CONTAINER}

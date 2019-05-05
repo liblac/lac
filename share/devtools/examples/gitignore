@@ -1,0 +1,15 @@
+# Ignore self
+.gitignore
+
+# Ignore tags
+.tags
+
+# Ignore gitstats
+.gitstats
+
+###############################################################################
+# Developer Specific Ignores
+###############################################################################
+.vimrc
+.ycm_extra_conf.py
+compile_commands.json

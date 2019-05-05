@@ -1,0 +1,5 @@
+#!/bin/bash
+# Exit on Any Command Failing
+set -e
+set -o pipefail
+utils/citools/linux/local_ci llvm-7.0

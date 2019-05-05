@@ -1,0 +1,51 @@
+" Indentations among other things
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+
+" vim-cmake-project plugin
+let g:VimuxOrientation = "h"
+let g:VimuxHeight = "50"
+
+nnoremap <F8> :call VimuxRunCommand("./checklist")<CR>
+let g:cmake_project_build_directory="../build/debug"
+let g:cmake_project_install_directory="../run/"
+
+" Tagbar Plugin
+let g:tagbar_left = 1
+let g:tagbar_vertical = 20
+let g:tagbar_previewwin_pos = "botright"
+let g:ycm_autoclose_preview_window_after_insertion = 1
+nmap <F10> :TagbarOpenAutoClose<CR>
+
+" Do not Confirm YCM Extra Configuration File
+let g:ycm_confirm_extra_conf = 0
+
+nnoremap <F6> :CMakeCompile <CR>
+nnoremap <F7> :YcmForceCompileAndDiagnostics <CR>
+map <F9> :YcmCompleter FixIt<CR>
+
+" Automatic C / C++ header guards
+function! s:insert_gates()
+  let gatename = substitute(substitute(substitute(substitute(substitute(toupper(@%), "\\.", "_", "g"), "/", "_", "g"), "INCLUDE_", "", "g"), "SRC_", "", "g"), "LIB_", "", "g")
+  execute "normal! i#ifndef " . gatename
+  execute "normal! o#define " . gatename
+  normal! o
+  execute "normal! Go#endif // " . gatename
+  normal! k
+endfunction
+autocmd BufNewFile *.{hpp} call <SID>insert_gates()
+
+" Remove Trailing Whitespace on Save
+autocmd BufWritePre * %s/\s\+$//e
+
+" Show trailing whitespace:
+highlight ExtraWhitespace ctermbg=red guibg=red
+autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+
+augroup filetypedetect
+    au BufRead,BufNewFile *.enum set filetype=json
+augroup END
+

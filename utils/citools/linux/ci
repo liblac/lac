@@ -1,0 +1,40 @@
+#!/bin/bash
+PROJECT_NAME=lac
+PLATFORM=$1
+
+# Exit on Any Command Failing
+set -e
+set -o pipefail
+
+# Defining CI Build and Test Function
+run_lac_ci(){
+  SRC_DIR=$1
+  TOOLCHAIN_FILE=$SRC_DIR/build/cmake/toolchain/$PLATFORM.cmake
+  BUILD_TYPE=$2
+  cmake \
+    -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+    -DCMAKE_TOOLCHAIN_FILE=/opt/jaystack/lac/llvm-7.0/etc/toolchain.cmake \
+    -DBUILD_TESTING=On \
+    -DLAC_TESTDATA_PATH=../testdata \
+    -DLAC_TESTOUTPUT_PATH=../testoutput \
+    $SRC_DIR
+  make -j8
+  LD_LIBRARY_PATH=/opt/jaystack/compiler/$PLATFORM/lib/ ctest
+}
+
+
+# Source Directory
+echo "Source Directory is " $PWD
+SRC=$PWD
+
+# Push into Build Directory
+mkdir -p /tmp/${PROJECT_NAME}/build
+pushd /tmp/${PROJECT_NAME}/build
+
+# LLVM Debug Build Type
+rm -rf *
+run_lac_ci $SRC Debug
+
+## LLVM Release Build Type
+rm -rf *
+run_lac_ci $SRC Release

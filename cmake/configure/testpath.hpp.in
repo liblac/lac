@@ -1,0 +1,14 @@
+#ifndef TESTLAC_META_TESTPATH_HPP
+#define TESTLAC_META_TESTPATH_HPP
+
+#include <string_view>
+
+namespace testlac::meta {
+struct test_path {
+  std::string_view data{"@LAC_TESTDATA_ABSPATH@"};
+  std::string_view output{"@LAC_TESTOUTPUT_ABSPATH@"};
+};
+
+} // namespace testlac::meta
+
+#endif // TESTLAC_META_TESTPATH_HPP
