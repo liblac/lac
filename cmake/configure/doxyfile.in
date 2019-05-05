@@ -1,0 +1,17 @@
+PROJECT_NAME           = "@CMAKE_PROJECT_NAME@"
+GENERATE_XML           = YES
+STRIP_FROM_PATH        = @PROJECT_SOURCE_DIR@
+INPUT                  = @PROJECT_SOURCE_DIR@/src/include
+HAVE_DOT               = YES
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+FILE_PATTERNS          = *.hpp
+EXTENSION_MAPPING      = ipp=C++
+RECURSIVE              = YES
+QUIET                  = YES
+USE_MDFILE_AS_MAINPAGE = @doxy_main_page@
+EXTRACT_ALL						 = YES
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+TEMPLATE_RELATIONS     = YES
+SOURCE_BROWSER         = YES
