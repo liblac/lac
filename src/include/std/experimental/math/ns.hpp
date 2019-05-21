@@ -1,0 +1,6 @@
+#ifndef STD_EXPERIMENTAL_MATH_NS_HPP
+#define STD_EXPERIMENTAL_MATH_NS_HPP
+
+#define MATH_NS std::experimental::math
+
+#endif // STD_EXPERIMENTAL_MATH_NS_HPP
