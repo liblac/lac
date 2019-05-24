@@ -1,4 +1,5 @@
 option(BUILD_TESTING "Build Testing" OFF)
+option(BUILD_DOC "Build Documentation" OFF)
 
 set(LAC_TEST "None" CACHE STRING "Selection of Tests")
 set_property(CACHE LAC_TEST PROPERTY STRINGS None Code)
@@ -6,6 +7,7 @@ set_property(CACHE LAC_TEST PROPERTY STRINGS None Code)
 set(LAC_TESTOUTPUT_PATH "" CACHE PATH "Path to Store Test Output")
 set(LAC_TESTDATA_PATH "" CACHE PATH "Path to Test Data")
 
+# Option Logic Code
 if (
     BUILD_TESTING
     AND (${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
@@ -39,4 +41,3 @@ if (NOT (${LAC_TEST} STREQUAL "None"))
     )
 endif()
 
-option(BUILD_DOC "Build Documentation" OFF)
