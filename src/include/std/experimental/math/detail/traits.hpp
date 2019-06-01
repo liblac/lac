@@ -19,7 +19,7 @@ private:
   static char test(typename Up::engine_type* = 0);
 
 public:
-  static const bool value = (sizeof(test<Tp>(0)) == 1);
+  static const bool value = (sizeof(test<Tp>(nullptr)) == 1);
 };
 
 template <class Tp, class E, bool = has_engine_type<Tp>::value>
