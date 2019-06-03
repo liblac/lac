@@ -31,7 +31,6 @@ struct uses_engine
 template <class Tp, class E>
 struct uses_engine<Tp, E, false> : public false_type {
 };
-
 } // namespace std::experimental::math::detail
 
 #endif // STD_EXPERIMENTAL_MATH_DETAIL_TRAITS_HPP

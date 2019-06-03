@@ -18,9 +18,15 @@ TEST_CASE("traits: test02: engine related traits", "[traits]")
   static_assert(math::is_engine_aware_v<testmath::traits_test02_struct_01>);
   static_assert(not math::is_engine_aware_v<testmath::traits_test02_struct_02>);
 
-  static_assert(math::uses_engine_v<testmath::traits_test02_struct_01, int>);
+  static_assert(math::uses_engine_v<int, testmath::traits_test02_struct_01>);
   static_assert(
-    not math::uses_engine_v<testmath::traits_test02_struct_01, void>);
+    not math::uses_engine_v<void, testmath::traits_test02_struct_01>);
   static_assert(
-    not math::uses_engine_v<testmath::traits_test02_struct_02, int>);
+    not math::uses_engine_v<int, testmath::traits_test02_struct_02>);
+
+  static_assert(math::uses_engine_v<int, testmath::traits_test02_struct_03a>);
+
+  static_assert(math::uses_engine_v<int,
+                                    testmath::traits_test02_struct_03a,
+                                    testmath::traits_test02_struct_03b>);
 }
