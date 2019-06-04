@@ -34,6 +34,21 @@ struct uses_engine : std::conjunction<detail::uses_engine<T, E>...> {
 template <class E, class... Tp>
 inline constexpr bool uses_engine_v = uses_engine<E, Tp...>::value;
 
+template <class Tp>
+struct is_owning_type : detail::is_owning_type<Tp> {
+};
+
+template <typename Tp>
+inline constexpr bool is_owning_type_v = is_owning_type<Tp>::value;
+
+template <typename... T>
+struct is_consuming_owning_type
+: std::disjunction<detail::is_consuming_owning_type<T>...> {
+};
+
+template <typename... T>
+inline constexpr bool is_consuming_owning_type_v
+  = is_consuming_owning_type<T...>::value;
 } // namespace std::experimental::math
 
 #endif // STD_EXPERIMENTAL_MATH_TRAITS_HPP
