@@ -1,5 +1,7 @@
 #define CATCH_CONFIG_FAST_COMPILE
 #include <catch2/catch.hpp>
+#include <iostream>
+#include <std/experimental/math/serial_cpu_engine_fwd.hpp>
 #include <std/experimental/math/vector.hpp>
 
 namespace math = std::experimental::math;
@@ -57,4 +59,42 @@ TEST_CASE("vector: test02: change engine and manipulation", "[vector]")
   auto w3 = v3.change_engine<double>();
   static_assert(
     std::is_same_v<math::vector_view<double, vector const>, decltype(w3)>);
+}
+
+TEST_CASE("vector: test03: operators", "[vector]")
+{
+
+  auto const tolerance = std::numeric_limits<double>::epsilon();
+  using vector = math::vector<math::serial_cpu_engine>;
+  std::size_t size = 10;
+  auto const w1 = ([size]() {
+    auto tmpw1 = vector(size);
+    for (std::size_t i = 0; i < size; ++i) {
+      tmpw1(i) = i;
+    }
+    return tmpw1;
+  })();
+
+  auto const w2 = ([size]() {
+    auto tmpw1 = vector(size);
+    for (std::size_t i = 0; i < size; ++i) {
+      tmpw1(i) = -static_cast<double>(i);
+    }
+    return tmpw1;
+  })();
+
+  auto const w3 = w1 + w2;
+  for (std::size_t i = 0; i < size; ++i) {
+    REQUIRE(std::abs(w3(i)) < tolerance);
+  }
+
+  auto const w4 = w1 - w2;
+  for (std::size_t i = 0; i < size; ++i) {
+    REQUIRE(std::abs(w4(i) - static_cast<double>(2 * i)) < tolerance);
+  }
+
+  auto const w5 = -w2;
+  for (std::size_t i = 0; i < size; ++i) {
+    REQUIRE(std::abs(w5(i) - static_cast<double>(i)) < tolerance);
+  }
 }
