@@ -1,0 +1,8 @@
+#ifndef STD_EXPERIMENTAL_MATH_PARALLEL_CPU_ENGINE_FWD_HPP
+#define STD_EXPERIMENTAL_MATH_PARALLEL_CPU_ENGINE_FWD_HPP
+
+namespace std::experimental::math {
+struct parallel_cpu_engine;
+}
+
+#endif // STD_EXPERIMENTAL_MATH_PARALLEL_CPU_ENGINE_FWD_HPP

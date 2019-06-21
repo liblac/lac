@@ -5,7 +5,8 @@
 #include <std/experimental/math/vector.hpp>
 
 namespace std::experimental::math {
-struct serial_cpu_engine;
+struct serial_cpu_engine {
+};
 
 template <typename T, typename U>
 struct addition_traits {
@@ -30,8 +31,10 @@ struct addition_engine {
 
 template <typename T,
           typename U,
-          typename = std::enable_if<
-            std::experimental::math::uses_engine_v<serial_cpu_engine, T, U>>>
+          typename = std::enable_if_t<std::experimental::math::uses_engine_v<
+            serial_cpu_engine,
+            std::remove_cv_t<std::remove_reference_t<T>>,
+            std::remove_cv_t<std::remove_reference_t<U>>>>>
 auto operator+(T&& t, U&& u) -> addition_traits_r<T&&, U&&>
 {
   auto constexpr ae = addition_engine<T, U>();
@@ -61,8 +64,10 @@ struct subtraction_engine {
 
 template <typename T,
           typename U,
-          typename = std::enable_if<
-            std::experimental::math::uses_engine_v<serial_cpu_engine, T, U>>>
+          typename = std::enable_if_t<std::experimental::math::uses_engine_v<
+            serial_cpu_engine,
+            std::remove_cv_t<std::remove_reference_t<T>>,
+            std::remove_cv_t<std::remove_reference_t<U>>>>>
 auto operator-(T&& t, U&& u) -> subtraction_traits_r<T&&, U&&>
 {
   auto constexpr se = subtraction_engine<T, U>();
@@ -91,8 +96,9 @@ struct negation_engine {
 };
 
 template <typename T,
-          typename = std::enable_if<
-            std::experimental::math::uses_engine_v<serial_cpu_engine, T>>>
+          typename = std::enable_if_t<std::experimental::math::uses_engine_v<
+            serial_cpu_engine,
+            std::remove_cv_t<std::remove_reference_t<T>>>>>
 auto operator-(T&& t) -> negation_traits_r<T&&>
 {
   auto constexpr ne = negation_engine<T>();

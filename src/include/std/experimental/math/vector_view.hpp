@@ -4,6 +4,8 @@
 #include <std/experimental/math/vector_view_fwd.hpp>
 #include <type_traits>
 
+namespace std::experimental::math::detail {
+}
 namespace std::experimental::math {
 
 template <typename E, typename R>
@@ -29,8 +31,15 @@ public:
 public:
   auto size() const noexcept -> size_type;
 
-  auto operator()(index_type i) const -> field_type const&;
-  auto operator()(index_type i) -> field_type&;
+  auto operator()(index_type i) const
+    -> std::conditional_t<std::is_const_v<R>,
+                          typename R::field_type const,
+                          typename R::field_type>&;
+
+  auto operator()(index_type i)
+    -> std::conditional_t<std::is_const_v<R>,
+                          typename R::field_type const,
+                          typename R::field_type>&;
 
   template <typename NE>
   auto change_engine() const -> vector_view<NE, owning_type>;
@@ -53,13 +62,19 @@ auto vector_view<E, R>::size() const noexcept -> size_type
 }
 
 template <typename E, typename R>
-auto vector_view<E, R>::operator()(index_type i) const -> field_type const&
+auto vector_view<E, R>::operator()(index_type i) const
+  -> std::conditional_t<std::is_const_v<R>,
+                        typename R::field_type const,
+                        typename R::field_type>&
 {
   return (*owner_ptr_)(i);
 }
 
 template <typename E, typename R>
-auto vector_view<E, R>::operator()(index_type i) -> field_type&
+auto vector_view<E, R>::operator()(index_type i)
+  -> std::conditional_t<std::is_const_v<R>,
+                        typename R::field_type const,
+                        typename R::field_type>&
 {
   return (*owner_ptr_)(i);
 }
